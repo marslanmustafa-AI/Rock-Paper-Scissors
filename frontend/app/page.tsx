@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Hand, HandMetal, Scissors, Upload, AlertCircle, Camera, Play, Square, Loader2 } from 'lucide-react';
 import { removeBackground } from '@imgly/background-removal';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 interface PredictionResult {
   predicted_class: string;
