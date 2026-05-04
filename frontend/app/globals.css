@@ -421,3 +421,48 @@ body {
   border-radius: 12px;
   margin-bottom: 1.5rem;
 }
+
+.top5-section {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.top5-title {
+  font-size: 0.875rem;
+  color: #a78bfa;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.top5-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.top5-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.top5-rank {
+  color: #6366f1;
+  font-weight: 600;
+  min-width: 24px;
+}
+
+.top5-label {
+  flex: 1;
+  color: #e2e8f0;
+  text-transform: capitalize;
+}
+
+.top5-conf {
+  color: #94a3b8;
+  font-weight: 500;
+}

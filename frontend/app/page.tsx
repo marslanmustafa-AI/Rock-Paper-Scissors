@@ -5,11 +5,21 @@ import { Hand, HandMetal, Scissors, Upload, AlertCircle, Camera, Play, Square, L
 import { removeBackground } from '@imgly/background-removal';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// const API_URL = 'http://192.168.18.43:8000';
 
 interface PredictionResult {
   predicted_class: string;
   confidence: number;
   all_predictions: Record<string, number>;
+  model_type?: string;
+  top5_classes?: string[];
+  top5_confidences?: number[];
+}
+
+interface ApiInfo {
+  model: string;
+  model_type: string;
+  labels: string[];
 }
 
 type Mode = 'idle' | 'upload' | 'camera' | 'live';
@@ -29,6 +39,7 @@ export default function Home() {
   const [isProcessingBg, setIsProcessingBg] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showVideo, setShowVideo] = useState(false);
+  const [modelType, setModelType] = useState<string>('keras');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const liveVideoRef = useRef<HTMLVideoElement>(null);
@@ -45,6 +56,18 @@ export default function Home() {
     }, 300); // Increased debounce time for smoother UI
     return () => clearTimeout(timer);
   }, [prediction]);
+
+  // Fetch API info on mount to determine model type
+  useEffect(() => {
+    fetch(`${API_URL}/`)
+      .then(res => res.json())
+      .then((data: ApiInfo) => {
+        setModelType(data.model_type || 'keras');
+      })
+      .catch(() => {
+        setModelType('keras');
+      });
+  }, []);
 
   const stopCapture = useCallback(() => {
     if (liveIntervalRef.current) {
@@ -408,6 +431,26 @@ export default function Home() {
                   <span className="result-confidence">{debouncedPrediction.confidence.toFixed(1)}%</span>
                 </div>
               </div>
+
+              {/* Show extended YOLO data if model_type is yolo */}
+              {modelType === 'yolo' && debouncedPrediction.top5_classes && (
+                <div className="top5-section">
+                  <h4 className="top5-title">Top 5 Predictions</h4>
+                  <div className="top5-list">
+                    {debouncedPrediction.top5_classes.map((cls, idx) => {
+                      const IconComponent = icons[cls];
+                      return (
+                        <div key={cls} className="top5-item">
+                          <span className="top5-rank">#{idx + 1}</span>
+                          {IconComponent && <IconComponent size={16} />}
+                          <span className="top5-label">{cls}</span>
+                          <span className="top5-conf">{debouncedPrediction.top5_confidences?.[idx].toFixed(1)}%</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               <div className="scores-grid">
                 {Object.entries(debouncedPrediction.all_predictions).map(([label, conf]) => {
