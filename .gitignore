@@ -9,5 +9,5 @@ wheels/
 # Virtual environments
 .venv
 
-ai/notebooks/data
+ai/notebooks/*data
 *.DS_Store
