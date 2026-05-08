@@ -10,4 +10,7 @@ wheels/
 .venv
 
 ai/notebooks/*data
+ai/notebooks/weights/
+ai/notebooks/models/
+ai/notebooks/yolo/runs/
 *.DS_Store
